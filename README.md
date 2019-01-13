@@ -4,6 +4,8 @@ A node application with 2 views:
 - Customer
 - Manager
 
+video link to working demo: https://www.youtube.com/watch?v=SYVfXLeU2cc&feature=youtu.be
+
 # Customer view: bamazonCustomer.js
 - displays a list of all available products with Ids, Names and Prices
 - User may then select the Id# of the product they would like to purchase

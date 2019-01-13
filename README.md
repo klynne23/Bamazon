@@ -8,7 +8,7 @@ A node application with 2 views:
 
 ## Program Guide
 
-#Customer view: bamazonCustomer.js
+# Customer view: bamazonCustomer.js
 * displays a list of all available products with Ids, Names and Prices
 * User may then select the Id# of the product they would like to purchase
 * User is then prompted to input their requested # of items
@@ -18,7 +18,7 @@ A node application with 2 views:
 
 #
 
-#Manager view: bamazonManager.js
+# Manager view: bamazonManager.js
 **4 available functions**
 
 1. View Products for Sale

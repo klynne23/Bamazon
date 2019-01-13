@@ -71,10 +71,11 @@ function start() {
         ]) // end .prompt
             .then(function (answer) {
                 // set up variables based on answer and query response
-                var numUnits = parseInt(answer.numUnits);
                 var itemIdInt = parseInt(answer.itemId);
+                var numUnits = parseInt(answer.numUnits);
                 var price = res[(itemIdInt - 1)].price;
                 var stock = res[(itemIdInt - 1)].stock_quantity;
+                var newStock = (stock - numUnits);
 
                 if (numUnits > stock) {
                     // display to the user the current amt of available items
@@ -85,46 +86,36 @@ function start() {
 
                 }
                 else {
-                    stockQuantity = (stock - numUnits);
-                    stockQuantityString = ("" + (stock - numUnits) + "");
-                    // console.log(stockQuantity);
-                    // console.log(stockQuantityString);
-                    // console.log(answer.itemId);
-                    // console.log("Updated Stock: " + stockQuantity);
-
                     // whyyyy doessss thissss queryyyyyyy notttttt workkkkkkkkkkkk
                     connection.query(
                         // this command works in mysqlworkbench "UPDATE products SET stock_quantity=10 WHERE item_id=1;"
                         "UPDATE products SET ? WHERE ?",
-                        [
-                            {
-                                stock_quantity: stockQuantityString
-                            },
-                            {
-                                item_id: answer.itemId
-                            }
-                        ],
+                        [{
+                            stock_quantity: newStock
+                        },
+                        {
+                            item_id: answer.itemId
+                        }],
                         function (error) {
-                            if (error) throw err;
-                            console.log("Stock updated successfully");
+                            if (error) throw error;
+                            // print out a receipt for the user 
+                            console.log("-------------------------------");
+                            console.log("╭*******************╮")
+                            console.log('| ORDER INFORMATION |')
+                            console.log("╰*******************╯")
+                            console.log("-------------------------------");
+                            console.log("Item: " + res[(itemIdInt - 1)].product_name);
+                            console.log("Units Requested: " + (numUnits));
+                            console.log("Price: $" + res[(itemIdInt - 1)].price + " (per item)");
+                            console.log("----------------------------");
+                            console.log("TOTAL PRICE: $" + (numUnits * price));
+                            // this is not being updated in database but will display what should be the new inventory
+                            console.log("Units Remaining: " + newStock + '\n');
+                            connection.end();
                         }
                     ) // end .query
-
-                    // print out a receipt for the user 
-                    console.log("-------------------------------");
-                    console.log("╭*******************╮")
-                    console.log('| ORDER INFORMATION |')
-                    console.log("╰*******************╯")
-                    console.log("-------------------------------");
-                    console.log("Item: " + res[(itemIdInt - 1)].product_name);
-                    console.log("Units Requested: " + (numUnits));
-                    console.log("Price: $" + res[(itemIdInt - 1)].price + " (per item)");
-                    console.log("----------------------------");
-                    console.log("TOTAL PRICE: $" + (numUnits * price));
-                    console.log("Units Remaining: " + stockQuantity + '\n');
                 }// end else
             })// end .then
     }); // end .query
-    connection.end();
 } // end start function
 

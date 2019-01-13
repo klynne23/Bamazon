@@ -36,7 +36,7 @@ A node application with 2 views:
 
 * if the items are not available the order does not go through and the user is shown their requested item's current stock quantity
 
-  
+---
 
 ### Manager view: bamazonManager.js
 

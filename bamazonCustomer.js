@@ -111,11 +111,11 @@ function start() {
                             console.log("TOTAL PRICE: $" + (numUnits * price));
                             // this is not being updated in database but will display what should be the new inventory
                             console.log("Units Remaining: " + newStock + '\n');
-                            connection.end();
                         }
-                    ) // end .query
-                }// end else
-            })// end .then
+                        ) // end .query
+                    }// end else
+                    connection.end();
+                })// end .then
     }); // end .query
 } // end start function
 

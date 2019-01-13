@@ -30,7 +30,6 @@ connection.connect(function (err) {
 // FUNCTIONS FOR EACH POSSIBLE USER INPUT //
 //****************************************//
 
-
 function viewProducts() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
@@ -38,7 +37,7 @@ function viewProducts() {
         // create an array to hold our formatted res data and loop through the res data
         var products = [];
         res.forEach(element => {
-            products.push("ID#: "+element.item_id +" | Product Name: "+ element.product_name+" | Price: $"+element.price+" | Quantity: "+element.stock_quantity);
+            products.push("ID#: " + element.item_id + " | Product Name: " + element.product_name + " | Price: $" + element.price + " | Quantity: " + element.stock_quantity);
         }); // end .forEach
 
         // display the items
@@ -48,12 +47,13 @@ function viewProducts() {
         products.forEach(element => {
             console.log(element);
         }); // end .forEach
-        console.log('\n (Press up/down arrow keys to return to the menu)');
+        console.log('\n');
+        start();
     }); // end .query
 } // end viewProductsFunction
 
 function viewLowInventory() {
-    connection.query("SELECT * FROM products", function(err, res){
+    connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
 
         // parse each product quantity
@@ -66,33 +66,33 @@ function viewLowInventory() {
         console.log('《 ALL PRODUCTS WITH LOW INVENTORY 》');
         console.log(" ----------------------------------" + '\n');
 
-        var counter=0;
+        var counter = 0;
         quantities.forEach(element => {
-            if (element<5){
-                console.log("ID#: "+res[counter].item_id +" | Product Name: "+ res[counter].product_name+" | Price: $"+res[counter].price+" | Quantity: "+res[counter].stock_quantity);
+            if (element < 10) {
+                console.log("ID#: " + res[counter].item_id + " | Product Name: " + res[counter].product_name + " | Price: $" + res[counter].price + " | Quantity: " + res[counter].stock_quantity);
             }
             counter++;
         }); // end .forEach
-        console.log('\n (Press up/down arrow keys to return to the menu)');
+        console.log('\n');
+        start();
     }); // end .queru
 } // end viewLowInventory
 
 function addInventory() {
-    console.log("prompt to add more inventory to an item \n");
     // do a query for the products table to display all data
-    connection.query("SELECT * FROM products", function (err, res){
+    connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
 
         var itemList = [];
         var itemIds = [];
         res.forEach(element => {
-            itemList.push("#" + element.item_id + ": " + element.product_name + " ($" + element.price + ")");
+            itemList.push("ID#: " + element.item_id + " | Product Name: " + element.product_name + " | Quantity: " + element.stock_quantity);
             itemIds.push("" + element.item_id + "");
         });// end .forEach  
 
-        console.log('\n' + "╭*******************************╮")
-        console.log('| AVAILABLE ITEMS LISTED BY ID# |')
-        console.log("╰*******************************╯" + '\n')
+        console.log('\n' + "╭*****************╮")
+        console.log('| AVAILABLE ITEMS |')
+        console.log("╰*****************╯" + '\n')
         console.log("-------------------------------");
         itemList.forEach(element => {
             console.log(element);
@@ -124,45 +124,135 @@ function addInventory() {
                 } // end validate
             } // end object of prompts
         ]) // end .prompt
-        .then(function (answer){
-            var itemIdInt = parseInt(answer.itemId);
-            var numUnits = parseInt(answer.numUnits);
-            var newStock =((res[(itemIdInt-1)].stock_quantity) + numUnits);
-            // console.log(newStock);
+            .then(function (answer) {
+                var itemIdInt = parseInt(answer.itemId);
+                var numUnits = parseInt(answer.numUnits);
+                var newStock = ((res[(itemIdInt - 1)].stock_quantity) + numUnits);
+                // console.log(newStock);
 
-            //try to update the database
-            connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [{
-                    stock_quantity: newStock
-                },
-                {
-                    item_id: answer.itemId
-                }],
-                function(err) {
-                    if (err) throw err;
-                    console.log("stock updated successfully");
-                    start();
-                }
+                //try to update the database
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [{
+                        stock_quantity: newStock
+                    },
+                    {
+                        item_id: answer.itemId
+                    }],
+                    function (err) {
+                        if (err) throw err;
+                        // print out a receipt for the user 
+                        console.log("-------------------------------");
+                        console.log("╭********************╮")
+                        console.log('| UPDATE INFORMATION |')
+                        console.log("╰********************╯")
+                        console.log("-------------------------------");
+                        console.log("Item: " + res[(itemIdInt - 1)].product_name);
+                        console.log("Units Added: " + (answer.numUnits));
+                        console.log("Total Units: " + newStock + '\n');
+                        start();
+                    }
                 );// end connection.query
-                
-                // print out a receipt for the user 
-                console.log("-------------------------------");
-                console.log("╭********************╮")
-                console.log('| UPDATE INFORMATION |')
-                console.log("╰********************╯")
-                console.log("-------------------------------");
-                console.log("Item: " + res[(itemIdInt - 1)].product_name);
-                console.log("Units Added: " + (answer.numUnits));
-                console.log("Total Units: " + newStock + '\n');
-                
             }) // end .then
-        }); // end connection.query
+    }); // end connection.query
 } // end addInventory
 
 function addProduct() {
     console.log("Add a new product to the store \n");
-}
+    // prompt for info about the item being added
+    inquirer.prompt([
+        {
+            name: "itemName",
+            type: "input",
+            message: "What is the name of the item you would like to add?"
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "What department would you like to place this item into?"
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "What price would you like this item to have?",
+            // validate that the input is a number
+            validate: function(value){
+                if(isNaN(value)===false){
+                    return true;
+                }
+                return false;
+            } // end validate
+        },
+        {
+            name: "stock",
+            type: "input",
+            message: "How much stock of this item is available?",
+            // validate that the input is a number
+            validate: function(value){
+                if (isNaN(value)===false){
+                    return true;
+                }
+                return false;
+            }
+        }// end array object of answers
+    ])// end .prompt
+    .then(function(answer){
+        // when prompting is finished insert the item into the db
+        connection.query(
+            "INSERT INTO products SET ?",
+            {
+                product_name: answer.itemName,
+                department_name: answer.department,
+                price: answer.price,
+                stock_quantity: answer.stock || 0
+            },
+            function(err){
+                if (err) throw err;
+                console.log("\n -------------------------------");
+                console.log("╭******************╮")
+                console.log('| ITEM INFORMATION |')
+                console.log("╰******************╯")
+                console.log("-------------------------------");
+                console.log("Item: " + answer.itemName);
+                console.log("Department: " + answer.department);
+                console.log("Item Price: $" + answer.price);
+                console.log("Item Stock Quantity: "+answer.stock + '\n');
+        start();
+            }
+        ); // end .query
+    }); // end .then
+} // end addProduct
+
+
+//*****************//
+// SWITCH FUNCTION //
+//*****************//
+
+var switchFunction = (userSelection) => {
+    switch (userSelection) {
+        case "View Products for Sale":
+            // call related function
+            viewProducts();
+            break;
+        case "View Low Inventory":
+            // call related function
+            viewLowInventory();
+            break;
+        case "Add to Inventory":
+            // call related function
+            addInventory();
+            break;
+        case "Add New Product":
+            // call related function
+            addProduct();
+            break;
+        case "Quit":
+            connection.end();
+            console.log("Bye! \n");
+
+    } // end switch (userSelection)
+}// end switchFunction
+
 
 //*****************//
 // INQUIRER PROMPT //
@@ -180,35 +270,3 @@ function start() {
         });
 } // end function start()
 
-
-
-//*****************//
-// SWITCH FUNCTION //
-//*****************//
-
-var switchFunction = (userSelection) => {
-    switch (userSelection) {
-        case "View Products for Sale":
-            // call related function
-            viewProducts();
-            start();
-            break;
-        case "View Low Inventory":
-            // call related function
-            viewLowInventory();
-            start();
-            break;
-        case "Add to Inventory":
-            // call related function
-            addInventory();
-            break;
-        case "Add New Product":
-            // call related function
-            addProduct();
-            break;
-        case "Quit":
-            connection.end();
-            console.log("Bye! \n");
-
-    } // end switch (userSelection)
-}// end switchFunction

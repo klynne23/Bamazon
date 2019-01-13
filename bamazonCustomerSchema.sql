@@ -14,7 +14,7 @@ CREATE TABLE products(
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("GameBoy Advance", "Electronics", 60, 20), ("Game of Thrones Season 1", "Movies/Tv", 25, 10),
-("Blue Sherpa Blanket", "Linens", 15, 15), ("Giant Gummy Bear", "Food", 30, 4), 
+("Blue Sherpa Blanket", "Linens", 15, 15), ("Giant Gummy Bear", "Food", 30, 7), 
 ("Puppy Calandar", "Calandars", 10, 100), ("Bluetooth Speaker", "Electronics", 35, 25),
-("Selfie Stick", "Accessories", 12, 50), ("Gold Ring", "Jewelry", 40, 20),
-("Echo Dot", "Electronics", 60, 35), ("Twinkle Lights", "Lighting", 15, 100);
+("Selfie Stick", "Accessories", 12, 50), ("Gold Ring", "Jewelry", 40, 9),
+("Echo Dot", "Electronics", 60, 5), ("Twinkle Lights", "Lighting", 15, 100);

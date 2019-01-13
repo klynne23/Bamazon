@@ -90,10 +90,9 @@ function addInventory() {
             itemIds.push("" + element.item_id + "");
         });// end .forEach  
 
-        console.log('\n' + "╭*****************╮")
-        console.log('| AVAILABLE ITEMS |')
-        console.log("╰*****************╯" + '\n')
-        console.log("-------------------------------");
+        console.log('\n');
+        console.log('《 ALL AVAILABLE PRODUCTS 》');
+        console.log(" -------------------------" + '\n');
         itemList.forEach(element => {
             console.log(element);
         }); // end .forEach
@@ -142,11 +141,9 @@ function addInventory() {
                     function (err) {
                         if (err) throw err;
                         // print out a receipt for the user 
-                        console.log("-------------------------------");
-                        console.log("╭********************╮")
-                        console.log('| UPDATE INFORMATION |')
-                        console.log("╰********************╯")
-                        console.log("-------------------------------");
+                        console.log('\n');
+                        console.log('《 UPDATE INFORMATION 》');
+                        console.log(" ---------------------" + '\n');
                         console.log("Item: " + res[(itemIdInt - 1)].product_name);
                         console.log("Units Added: " + (answer.numUnits));
                         console.log("Total Units: " + newStock + '\n');
@@ -176,8 +173,8 @@ function addProduct() {
             type: "input",
             message: "What price would you like this item to have?",
             // validate that the input is a number
-            validate: function(value){
-                if(isNaN(value)===false){
+            validate: function (value) {
+                if (isNaN(value) === false) {
                     return true;
                 }
                 return false;
@@ -188,39 +185,37 @@ function addProduct() {
             type: "input",
             message: "How much stock of this item is available?",
             // validate that the input is a number
-            validate: function(value){
-                if (isNaN(value)===false){
+            validate: function (value) {
+                if (isNaN(value) === false) {
                     return true;
                 }
                 return false;
             }
         }// end array object of answers
     ])// end .prompt
-    .then(function(answer){
-        // when prompting is finished insert the item into the db
-        connection.query(
-            "INSERT INTO products SET ?",
-            {
-                product_name: answer.itemName,
-                department_name: answer.department,
-                price: answer.price,
-                stock_quantity: answer.stock || 0
-            },
-            function(err){
-                if (err) throw err;
-                console.log("\n -------------------------------");
-                console.log("╭******************╮")
-                console.log('| ITEM INFORMATION |')
-                console.log("╰******************╯")
-                console.log("-------------------------------");
-                console.log("Item: " + answer.itemName);
-                console.log("Department: " + answer.department);
-                console.log("Item Price: $" + answer.price);
-                console.log("Item Stock Quantity: "+answer.stock + '\n');
-        start();
-            }
-        ); // end .query
-    }); // end .then
+        .then(function (answer) {
+            // when prompting is finished insert the item into the db
+            connection.query(
+                "INSERT INTO products SET ?",
+                {
+                    product_name: answer.itemName,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.stock || 0
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log('\n');
+                    console.log('《 NEW ITEM INFORMATION 》');
+                    console.log(" -----------------------" + '\n');
+                    console.log("Item: " + answer.itemName);
+                    console.log("Department: " + answer.department);
+                    console.log("Item Price: $" + answer.price);
+                    console.log("Item Stock Quantity: " + answer.stock + '\n');
+                    start();
+                }
+            ); // end .query
+        }); // end .then
 } // end addProduct
 
 

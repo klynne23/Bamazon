@@ -31,14 +31,12 @@ function start() {
         var itemList = [];
         var itemIds = [];
         res.forEach(element => {
-            itemList.push("#" + element.item_id + ": " + element.product_name + " ($" + element.price + ")");
+            itemList.push("#" + element.item_id + ": " + element.product_name + " | $" + element.price);
             itemIds.push("" + element.item_id + "");
         }); // end .forEach
 
-        console.log('\n' + "╭*******************************╮")
-        console.log('| AVAILABLE ITEMS LISTED BY ID# |')
-        console.log("╰*******************************╯" + '\n')
-        console.log("-------------------------------");
+        console.log("\n");
+        console.log('《 ALL AVAILABLE PRODUCTS AND PRICES 》\n');
         itemList.forEach(element => {
             console.log(element);
         }); // end .forEach
@@ -49,7 +47,7 @@ function start() {
             {
                 name: "itemId",
                 type: "list",
-                message: "Plese select the ID# of the item you would like to purchase",
+                message: "Plese select the # of the item you would like to purchase",
                 //****// small bug here, the list goes on infinitely, i tried every way possible to
                 //****// build the itemIds array to avoid this but was unsuccesful
                 choices: itemIds
@@ -79,10 +77,9 @@ function start() {
 
                 if (numUnits > stock) {
                     // display to the user the current amt of available items
-                    console.log('\n' + "╭****************************╮")
-                    console.log("| Insufficient item quantity |");
-                    console.log("|     Units Available: " + stock);
-                    console.log("╰****************************╯ \n")
+                    console.log('\n《 INSUFFICIENT UNITS AVAILABLE 》');
+                    console.log("     Units Available: " + stock);
+                    console.log("----------------------------\n")
 
                 }
                 else {
@@ -99,23 +96,19 @@ function start() {
                         function (error) {
                             if (error) throw error;
                             // print out a receipt for the user 
-                            console.log("-------------------------------");
-                            console.log("╭*******************╮")
-                            console.log('| ORDER INFORMATION |')
-                            console.log("╰*******************╯")
-                            console.log("-------------------------------");
+                            console.log('\n《 ORDER INFORMATION 》\n');
                             console.log("Item: " + res[(itemIdInt - 1)].product_name);
                             console.log("Units Requested: " + (numUnits));
-                            console.log("Price: $" + res[(itemIdInt - 1)].price + " (per item)");
-                            console.log("----------------------------");
+                            console.log("Price per item: $" + res[(itemIdInt - 1)].price);
+                            console.log("---------------------");
                             console.log("TOTAL PRICE: $" + (numUnits * price));
-                            // this is not being updated in database but will display what should be the new inventory
-                            console.log("Units Remaining: " + newStock + '\n');
+                            console.log("\n");
+
                         }
-                        ) // end .query
-                    }// end else
-                    connection.end();
-                })// end .then
+                    ) // end .query
+                }// end else
+                connection.end();
+            })// end .then
     }); // end .query
 } // end start function
 

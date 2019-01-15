@@ -155,7 +155,6 @@ function addInventory() {
 } // end addInventory
 
 function addProduct() {
-    console.log("Add a new product to the store \n");
     // prompt for info about the item being added
     inquirer.prompt([
         {

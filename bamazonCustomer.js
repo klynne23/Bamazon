@@ -83,7 +83,6 @@ function start() {
 
                 }
                 else {
-                    // whyyyy doessss thissss queryyyyyyy notttttt workkkkkkkkkkkk
                     connection.query(
                         // this command works in mysqlworkbench "UPDATE products SET stock_quantity=10 WHERE item_id=1;"
                         "UPDATE products SET ? WHERE ?",
